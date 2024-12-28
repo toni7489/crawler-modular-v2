@@ -144,24 +144,27 @@ style.configure("Treeview.Heading", font=("Arial", 12, "bold"), background=COLOR
 
 style.map("Treeview", background=[("selected", "#666666")], foreground=[("selected", "white")])
 
-# Frame para la entrada de URL y botón de análisis
+# Frame para la entrada de URL, estado y enlaces encontrados
 input_frame = ttk.Frame(root, padding="10 10 10 10", style="Custom.TFrame")
-input_frame.pack(pady=(10))
+input_frame.pack(pady=(10), fill=tk.X)
 
 url_label = ttk.Label(input_frame, text="Ingresa la URL:", background=COLOR_FONDO_PRINCIPAL, foreground=COLOR_TEXTO_PRINCIPAL)
 url_label.pack(side="left", padx=(5))
 
-url_entry = ttk.Entry(input_frame, width=50)
+url_entry = ttk.Entry(input_frame, width=30)  # Ajustar el ancho del campo de entrada
 url_entry.pack(side="left", padx=(5))
 
 analyze_button = ttk.Button(input_frame, text="Iniciar Análisis", command=analyze_url, style="Custom.TButton")
 analyze_button.pack(side="left", padx=(5))
 
-status_label = ttk.Label(root, text="Esperando para iniciar el análisis...", background=COLOR_FONDO_PRINCIPAL, foreground=COLOR_TEXTO_PRINCIPAL)
-status_label.pack(pady=(5))
+status_label = ttk.Label(input_frame, text="Esperando para iniciar el análisis...", background=COLOR_FONDO_PRINCIPAL, foreground=COLOR_TEXTO_PRINCIPAL)
+status_label.pack(side="left", padx=(5))
 
-total_links_label = ttk.Label(root, text="Enlaces encontrados: 0", background=COLOR_FONDO_PRINCIPAL, foreground=COLOR_TEXTO_PRINCIPAL)
-total_links_label.pack(pady=(5))
+# Crear un estilo personalizado para el total_links_label
+style.configure("Custom.TLabel", background=COLOR_BOTONES, foreground=COLOR_TEXTO_BOTONES, padding="5 5 5 5")
+
+total_links_label = ttk.Label(input_frame, text="Enlaces encontrados: 0", style="Custom.TLabel")
+total_links_label.pack(side="left", padx=(5))
 
 # Frame para la tabla de resultados
 result_frame = ttk.Frame(root, padding="10 10 10 10")
@@ -173,6 +176,11 @@ result_tree = ttk.Treeview(result_frame, columns=columns, show="headings", heigh
 
 for col in columns:
     result_tree.heading(col, text=col)
+
+# Ajustar el ancho de las columnas "Respuesta" y "Tipo"
+result_tree.column("Respuesta", width=40, minwidth=40)  # Ancho en píxeles para 4 dígitos
+result_tree.column("Tipo", width=40, minwidth=40)  # Ancho en píxeles para 4 caracteres
+result_tree.column("Profundidad", width=40, minwidth=40)  # Ancho en píxeles para 4 caracteres
 
 result_tree.pack(expand=True, fill=tk.BOTH, padx=(10), pady=(10))
 
