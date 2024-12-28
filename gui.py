@@ -166,6 +166,10 @@ style.configure("Custom.TLabel", background=COLOR_BOTONES, foreground=COLOR_TEXT
 total_links_label = ttk.Label(input_frame, text="Enlaces encontrados: 0", style="Custom.TLabel")
 total_links_label.pack(side="left", padx=(5))
 
+# Añadir el título "Link Crawler" en la parte superior derecha
+title_label = ttk.Label(root, text="Link Crawler", font=("Arial", 24, "bold"), background=COLOR_FONDO_PRINCIPAL, foreground=COLOR_TEXTO_PRINCIPAL)
+title_label.place(relx=0.95, rely=0.0, anchor='ne', x=50, y=20)  # Ajusta la posición con x e y según sea necesario
+
 # Frame para la tabla de resultados
 result_frame = ttk.Frame(root, padding="10 10 10 10")
 result_frame.pack(fill=tk.BOTH, expand=True)
