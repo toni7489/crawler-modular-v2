@@ -77,8 +77,69 @@ def new_analysis():
     total_links_label.config(text="Enlaces encontrados: 0")
 
 def filter_results():
-    # Implementa la lógica para filtrar resultados
-    pass
+    def apply_filter():
+        # Limpiar el Treeview
+        result_tree.delete(*result_tree.get_children())
+        
+        # Obtener los valores de los filtros
+        response_code = response_code_entry.get()
+        url_contains = url_contains_entry.get()
+        depth = depth_entry.get()
+        search_word = search_word_entry.get()
+
+        # Aplicar los filtros a los datos recogidos
+        filtered_data = [
+            result for result in collected_data
+            if (not response_code or str(result['Código de Respuesta']) == response_code)
+            and (not url_contains or url_contains in result['URL'])
+            and (not depth or str(result['Profundidad']) == depth)
+            and (not search_word or search_word.lower() in result['URL'].lower() or search_word.lower() in str(result['Título']).lower() or search_word.lower() in str(result['Etiqueta H1']).lower() or search_word.lower() in str(result['Meta Descripción']).lower())
+        ]
+
+        # Insertar los datos filtrados en el Treeview
+        for result in filtered_data:
+            result_tree.insert("", "end", values=(result['Código de Respuesta'], result['URL'], result['Tipo'], result['Título'], result['Etiqueta H1'], result['Meta Descripción'], result['Profundidad']))
+
+    def show_all_results():
+        result_tree.delete(*result_tree.get_children())
+        for result in collected_data:
+            result_tree.insert("", "end", values=(result['Código de Respuesta'], result['URL'], result['Tipo'], result['Título'], result['Etiqueta H1'], result['Meta Descripción'], result['Profundidad']))
+
+    # Crear una nueva ventana para los filtros
+    filter_window = tk.Toplevel(root)
+    filter_window.title("Filtrar Resultados")
+    filter_window.configure(bg=COLOR_FONDO_PRINCIPAL)
+
+    # Etiquetas y campos de entrada para los filtros
+    ttk.Label(filter_window, text="Código de Respuesta:", background=COLOR_FONDO_PRINCIPAL, foreground=COLOR_TEXTO_PRINCIPAL).grid(row=0, column=0, padx=10, pady=5)
+    response_code_entry = ttk.Entry(filter_window)
+    response_code_entry.grid(row=0, column=1, padx=10, pady=5)
+
+    ttk.Label(filter_window, text="URL contiene:", background=COLOR_FONDO_PRINCIPAL, foreground=COLOR_TEXTO_PRINCIPAL).grid(row=1, column=0, padx=10, pady=5)
+    url_contains_entry = ttk.Entry(filter_window)
+    url_contains_entry.grid(row=1, column=1, padx=10, pady=5)
+
+    ttk.Label(filter_window, text="Profundidad:", background=COLOR_FONDO_PRINCIPAL, foreground=COLOR_TEXTO_PRINCIPAL).grid(row=2, column=0, padx=10, pady=5)
+    depth_entry = ttk.Entry(filter_window)
+    depth_entry.grid(row=2, column=1, padx=10, pady=5)
+
+    ttk.Label(filter_window, text="Buscar palabra:", background=COLOR_FONDO_PRINCIPAL, foreground=COLOR_TEXTO_PRINCIPAL).grid(row=3, column=0, padx=10, pady=5)
+    search_word_entry = ttk.Entry(filter_window)
+    search_word_entry.grid(row=3, column=1, padx=10, pady=5)
+
+    # Frame para los botones
+    button_frame = ttk.Frame(filter_window, style="Custom.TFrame")
+    button_frame.grid(row=4, column=0, columnspan=2, pady=10)
+
+    # Botones para aplicar filtros, mostrar todos los resultados y cerrar la ventana
+    apply_button = ttk.Button(button_frame, text="Aplicar Filtros", command=apply_filter, style="Custom.TButton")
+    apply_button.pack(side="left", padx=5)
+
+    show_all_button = ttk.Button(button_frame, text="Mostrar Todos", command=show_all_results, style="Custom.TButton")
+    show_all_button.pack(side="left", padx=5)
+
+    close_button = ttk.Button(button_frame, text="Cerrar", command=filter_window.destroy, style="Custom.TButton")
+    close_button.pack(side="left", padx=5)
 
 def show_manual():
     # Implementa la lógica para mostrar el manual de usuario
