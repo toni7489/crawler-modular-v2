@@ -86,6 +86,7 @@ def filter_results():
         url_contains = url_contains_entry.get()
         depth = depth_entry.get()
         search_word = search_word_entry.get()
+        tipo = tipo_entry.get()
 
         # Aplicar los filtros a los datos recogidos
         filtered_data = [
@@ -94,6 +95,7 @@ def filter_results():
             and (not url_contains or url_contains in result['URL'])
             and (not depth or str(result['Profundidad']) == depth)
             and (not search_word or search_word.lower() in result['URL'].lower() or search_word.lower() in str(result['Título']).lower() or search_word.lower() in str(result['Etiqueta H1']).lower() or search_word.lower() in str(result['Meta Descripción']).lower())
+            and (not tipo or tipo.lower() in result['Tipo'].lower())
         ]
 
         # Insertar los datos filtrados en el Treeview
@@ -127,9 +129,13 @@ def filter_results():
     search_word_entry = ttk.Entry(filter_window)
     search_word_entry.grid(row=3, column=1, padx=10, pady=5)
 
+    ttk.Label(filter_window, text="Tipo:", background=COLOR_FONDO_PRINCIPAL, foreground=COLOR_TEXTO_PRINCIPAL).grid(row=4, column=0, padx=10, pady=5)
+    tipo_entry = ttk.Entry(filter_window)
+    tipo_entry.grid(row=4, column=1, padx=10, pady=5)
+
     # Frame para los botones
     button_frame = ttk.Frame(filter_window, style="Custom.TFrame")
-    button_frame.grid(row=4, column=0, columnspan=2, pady=10)
+    button_frame.grid(row=5, column=0, columnspan=2, pady=10)
 
     # Botones para aplicar filtros, mostrar todos los resultados y cerrar la ventana
     apply_button = ttk.Button(button_frame, text="Aplicar Filtros", command=apply_filter, style="Custom.TButton")
@@ -146,12 +152,15 @@ def show_manual():
     pass
 
 def show_about():
-    messagebox.showinfo("Acerca de", "Analizador de Enlaces SEO\nVersión 1.0\n© 2024 Tu Nombre")
+    messagebox.showinfo("Acerca de", "Link Spider | Analizador de Enlaces SEO\nVersión 1.0\n© 2024 Toni Maroto")
 
 # Crear la ventana principal con un tema moderno
 root = ThemedTk(theme="arc")
 root.title("Analizador de Enlaces SEO")
 root.configure(bg=COLOR_FONDO_PRINCIPAL)
+
+# Establecer el icono de la aplicación (reemplaza 'icono.ico' con la ruta real a tu archivo de icono)
+root.iconbitmap('icono.ico')
 
 # Crear la barra de menú
 menu_bar = tk.Menu(root, bg=COLOR_FONDO_PRINCIPAL, fg=COLOR_TEXTO_PRINCIPAL)
